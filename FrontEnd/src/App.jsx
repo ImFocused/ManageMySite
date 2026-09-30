@@ -8,6 +8,8 @@ import Reports from "./pages/reports/Reports";
 import ReportDetail from "./pages/reports/ReportDetail";
 import Planning from "./pages/planning/Planning";
 import ReviewQueue from "./pages/reports/ReviewQueue";
+import BuilderReviewQueue from "./pages/reports/BuilderReviewQueue";
+import ContractorReports from "./pages/reports/ContractorReports";
 
 import "./App.css";
 
@@ -133,6 +135,24 @@ export default function App() {
           element={
             <AppShell>
               <ReportDetail />
+            </AppShell>
+          }
+        />
+
+        <Route
+          path="/builder-review"
+          element={
+            <AppShell>
+              <BuilderReviewQueue />
+            </AppShell>
+          }
+        />
+
+        <Route
+          path="/contractor-reports"
+          element={
+            <AppShell>
+              <ContractorReports />
             </AppShell>
           }
         />

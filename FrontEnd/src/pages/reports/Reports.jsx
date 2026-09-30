@@ -90,7 +90,7 @@ function getPageContent(role) {
   }
 }
 
-function getReportsForRole(role) {
+function getReportsForRole(role, reports) {
   switch (role) {
     case "engineer":
       return reports.filter(
@@ -133,7 +133,7 @@ export default function Reports() {
   const content = getPageContent(demoRole);
 
   const visibleReports = getReportsForRole(
-    demoRole
+    demoRole, reports
   );
 
   const awaitingEngineerReview =

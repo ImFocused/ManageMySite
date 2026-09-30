@@ -7,12 +7,16 @@ import {
 } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import EngineerDashboard from "./EngineerDashboard";
+import ContractorDashboard from "./ContractorDashboard";
 
 export default function Dashboard() {
     const { demoRole } = useApp();
 
     if (demoRole === "engineer") {
     return <EngineerDashboard />;
+    }
+    if (demoRole === "contractor") {
+    return <ContractorDashboard />;
     }
   return (
     <div className="dashboard-page">

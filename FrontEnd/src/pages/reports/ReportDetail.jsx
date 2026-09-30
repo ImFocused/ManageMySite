@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Send,
   RotateCcw,
+  Eye,
+
 } from "lucide-react";
 
 import { useApp } from "../../context/AppContext";
@@ -93,6 +95,15 @@ export default function ReportDetail() {
   const canBuilderReview =
     demoRole === "builder" &&
     report.status === "builder_review";
+  
+  const canPublish = 
+        demoRole === "builder" && report.status === "ready_to_publish";
+
+
+  const canContractorResubmit =
+  demoRole === "contractor" &&
+  (report.status === "contractor_revision" ||
+    report.status === "engineer_revision");
 
   const isContractor =
     demoRole === "contractor";
@@ -102,10 +113,6 @@ export default function ReportDetail() {
 
   const isViewer =
     demoRole === "viewer";
-
-  const canResubmit =
-    isContractor &&
-    report.status === "declined";
 
   function nextPhoto() {
     setSelectedPhotoIndex(
@@ -346,6 +353,14 @@ export default function ReportDetail() {
           setFeedback={setFeedback}
           approveLabel="Approve Report"
           declineLabel="Decline Report"
+          onApprove={() => {
+            approveReport(report.id, feedback);
+            navigate("/review-queue");
+          }}
+          onDecline={() => {
+            declineReport(report.id, feedback);
+            navigate("/reports");
+          }}
         />
       )}
 
@@ -356,97 +371,87 @@ export default function ReportDetail() {
           description="This report has passed Engineer review and is ready for your final approval."
           feedback={feedback}
           setFeedback={setFeedback}
-          approveLabel="Approve & Publish"
+          approveLabel="Approve"
           declineLabel="Return to Engineer"
+          onApprove={() => {
+            builderApproveReport(report.id, feedback);
+            navigate("/builder-review");
+          }}
+          onDecline={() => {
+            builderDeclineReport(report.id, feedback);
+            navigate("/builder-review");
+          }}
         />
       )}
 
+        
+
+      {canPublish && (
+        <section className="report-action-panel">
+          <div className="report-action-panel-header">
+            <div>
+              <span className="page-eyebrow">READY TO PUBLISH</span>
+              <h2>Publish to Viewers</h2>
+              <p>
+                This report has received final Builder approval and is ready to be
+                shared with project viewers.
+              </p>
+            </div>
+          </div>
+
+          <div className="report-action-panel-footer">
+            <button
+              className="button button-success"
+              onClick={() => {
+                publishReport(report.id);
+                navigate("/builder-review");
+              }}
+            >
+              <CheckCircle2 size={17} />
+              Publish to Viewers
+            </button>
+          </div>
+        </section>
+      )}
+
+      
       {/* CONTRACTOR */}
 
-      {isContractor && (
-        <section className="panel role-information-panel">
+      {canContractorResubmit && (
+        <section className="report-action-panel contractor-resubmit-panel">
+          <div className="report-action-panel-header">
+            <div>
+              <span className="page-eyebrow">ACTION REQUIRED</span>
+              <h2>Revise & Resubmit</h2>
+              <p>
+                Review the feedback below, make the required corrections, and
+                resubmit this report for Engineer review.
+              </p>
+            </div>
+          </div>
 
-          <span className="panel-label">
-            CONTRACTOR VIEW
-          </span>
-
-          <h3>Report Status</h3>
-
-          {report.status === "engineer_review" && (
-            <div className="role-message">
-              <Clock3 size={19} />
-
+          {report.feedback && (
+            <div className="contractor-resubmit-feedback">
+              <RotateCcw size={16} />
               <div>
-                <strong>
-                  Your report is under review.
-                </strong>
-
-                <span>
-                  The Engineer is currently reviewing
-                  your construction evidence.
-                </span>
+                <strong>Review feedback</strong>
+                <p>{report.feedback}</p>
               </div>
             </div>
           )}
 
-          {report.status === "builder_review" && (
-            <div className="role-message">
-              <Clock3 size={19} />
-
-              <div>
-                <strong>
-                  Engineer approved your report.
-                </strong>
-
-                <span>
-                  The report is now waiting for
-                  Builder approval.
-                </span>
-              </div>
-            </div>
-          )}
-
-          {report.status === "approved" && (
-            <div className="role-message success">
-              <CheckCircle2 size={19} />
-
-              <div>
-                <strong>
-                  Your report was approved.
-                </strong>
-
-                <span>
-                  The construction work has passed
-                  the review stage.
-                </span>
-              </div>
-            </div>
-          )}
-
-          {report.status === "published" && (
-            <div className="role-message success">
-              <CheckCircle2 size={19} />
-
-              <div>
-                <strong>
-                  This report has been published.
-                </strong>
-
-                <span>
-                  The project viewer can now see
-                  this construction update.
-                </span>
-              </div>
-            </div>
-          )}
-
-          {canResubmit && (
-            <button className="resubmit-button">
+          <div className="report-action-panel-footer">
+            <button
+              className="button button-primary"
+              onClick={() => {
+                resubmitReport(report.id, report.description);
+                navigate("/contractor-reports");
+              }}
+            >
               <RotateCcw size={17} />
-              Fix & Resubmit Report
+              Resubmit for Review
             </button>
-          )}
-
+          </div>
         </section>
       )}
 
@@ -551,19 +556,7 @@ export default function ReportDetail() {
         </section>
       )}
 
-      {/* EXISTING FEEDBACK */}
-
-      {report.feedback && (
-        <section className="panel existing-feedback">
-
-          <span className="panel-label">
-            REVIEW FEEDBACK
-          </span>
-
-          <p>{report.feedback}</p>
-
-        </section>
-      )}
+      
 
       {/* FULL PHOTO VIEWER */}
 
@@ -730,12 +723,12 @@ function ReviewActionPanel({
   setFeedback,
   approveLabel,
   declineLabel,
+  onApprove,
+  onDecline,
 }) {
   return (
     <section className="panel review-action-panel">
-
       <div className="review-action-header">
-
         <div>
           <span className="panel-label">
             {eyebrow}
@@ -745,7 +738,6 @@ function ReviewActionPanel({
 
           <p>{description}</p>
         </div>
-
       </div>
 
       <label className="review-feedback-label">
@@ -769,31 +761,27 @@ function ReviewActionPanel({
       </div>
 
       <div className="review-actions">
-
-        <button
+        <div className="report-action-panel-footer">
+          <button
+            type="button"
             className="button button-success"
-            onClick={() => {
-                approveReport(report.id, feedback);
-                navigate("/review-queue");
-            }}
-            >
+            onClick={onApprove}
+          >
             <CheckCircle2 size={17} />
             {approveLabel}
-        </button>
+          </button>
 
-        <button
+          <button
+            type="button"
             className="button button-danger"
             disabled={!feedback.trim()}
-            onClick={() => {
-                declineReport(report.id, feedback);
-                navigate("/reports");
-            }}
-            >
+            onClick={onDecline}
+          >
             <XCircle size={17} />
             {declineLabel}
-        </button>
+          </button>
+        </div>
       </div>
-
     </section>
   );
 }

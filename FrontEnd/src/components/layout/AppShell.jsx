@@ -209,26 +209,6 @@ export default function AppShell({ children }) {
                   Project Manager
                 </option>
 
-                <option value="govtContractor">
-                  Government Contractor
-                </option>
-
-                <option value="teamEngineer">
-                  Team Engineer
-                </option>
-
-                <option value="je">
-                  Junior Engineer
-                </option>
-
-                <option value="de">
-                  Deputy Engineer
-                </option>
-
-                <option value="ee">
-                  Executive Engineer
-                </option>
-
                 <option value="viewer">
                   Viewer
                 </option>

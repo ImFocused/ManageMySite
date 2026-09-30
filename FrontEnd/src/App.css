@@ -3984,3 +3984,1025 @@
     display: none;
   }
 }
+
+/* BUILDER REVIEW QUEUE */
+
+.builder-review-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.builder-review-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.builder-review-header h1 {
+  margin: 4px 0 5px;
+  color: var(--text-primary);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.builder-review-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.builder-review-project {
+  min-width: 220px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.builder-review-project span,
+.builder-review-project small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.builder-review-project strong {
+  display: block;
+  margin: 5px 0 3px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.builder-review-project small {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.builder-review-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.builder-review-stat {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 72px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.builder-review-stat-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--blue-bg);
+  color: var(--navy);
+}
+
+.builder-review-stat span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.builder-review-stat strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-primary);
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.builder-review-workflow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.builder-review-step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+}
+
+.builder-review-step > span {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 50%;
+  background: #eef1f6;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.builder-review-step.active > span {
+  background: var(--navy);
+  color: #fff;
+}
+
+.builder-review-step strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.builder-review-step small {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+.builder-review-workflow > svg {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.builder-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.builder-review-list-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.builder-review-list-header h2 {
+  margin: 4px 0 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.builder-review-count {
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.builder-review-card {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.builder-review-photo {
+  height: 118px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #eef1f6;
+}
+
+.builder-review-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.builder-review-card-main {
+  min-width: 0;
+}
+
+.builder-review-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.builder-report-id {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.builder-review-card h3 {
+  margin: 3px 0 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.builder-review-card p {
+  margin: 9px 0;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.builder-review-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 16px;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.builder-engineer-feedback {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-left: 2px solid var(--navy);
+  background: #f7f9fd;
+}
+
+.builder-engineer-feedback svg {
+  flex-shrink: 0;
+  color: var(--navy);
+}
+
+.builder-engineer-feedback strong,
+.builder-engineer-feedback span {
+  display: block;
+  font-size: 8px;
+}
+
+.builder-engineer-feedback strong {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.builder-engineer-feedback span {
+  margin-top: 2px;
+  color: var(--text-secondary);
+}
+
+.builder-review-card-action {
+  display: flex;
+  align-items: center;
+}
+
+.builder-empty-state {
+  padding: 42px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.builder-empty-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.builder-empty-state h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.builder-empty-state p {
+  margin: 6px auto 0;
+  max-width: 420px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.builder-publish-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 17px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.builder-publish-preview h2 {
+  margin: 4px 0;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.builder-publish-preview p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+@media (max-width: 850px) {
+  .builder-review-header,
+  .builder-publish-preview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .builder-review-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-review-card {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-review-photo {
+    height: 180px;
+  }
+
+  .builder-review-card-action {
+    justify-content: flex-start;
+  }
+
+  .builder-review-workflow {
+    overflow-x: auto;
+  }
+}
+
+/* CONTRACTOR DASHBOARD */
+
+.contractor-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contractor-dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.contractor-dashboard-header h1 {
+  margin: 4px 0 5px;
+  color: var(--text-primary);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.contractor-dashboard-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.contractor-project-card {
+  min-width: 220px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.contractor-project-card span,
+.contractor-project-card small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.contractor-project-card strong {
+  display: block;
+  margin: 5px 0 3px;
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.contractor-project-card small {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.contractor-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.contractor-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 72px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.contractor-stat-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--blue-bg);
+  color: var(--navy);
+}
+
+.contractor-stat-warning .contractor-stat-icon {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.contractor-stat-card span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.contractor-stat-card strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-primary);
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.contractor-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 14px;
+}
+
+.contractor-panel {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.contractor-panel-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.contractor-panel-header h2 {
+  margin: 4px 0 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.contractor-text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--navy);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.contractor-work-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.contractor-work-item > div {
+  min-width: 0;
+}
+
+.contractor-work-code {
+  display: block;
+  color: var(--text-muted);
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.contractor-work-item strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
+.contractor-work-item small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 8px;
+}
+
+.contractor-work-status {
+  flex-shrink: 0;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: var(--blue-bg);
+  color: var(--navy);
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.contractor-activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.contractor-activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+}
+
+.contractor-activity-item > div {
+  min-width: 0;
+}
+
+.contractor-activity-item strong {
+  display: block;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 9px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contractor-activity-item span {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 7px;
+}
+
+.contractor-status {
+  flex-shrink: 0;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: var(--blue-bg);
+  color: var(--navy) !important;
+  font-size: 7px !important;
+  font-weight: 800;
+}
+
+.contractor-status-contractor_revision {
+  background: var(--red-bg);
+  color: var(--red) !important;
+}
+
+.contractor-status-published {
+  background: var(--green-bg);
+  color: var(--green) !important;
+}
+
+.contractor-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 120px;
+  color: var(--text-muted);
+  font-size: 9px;
+}
+
+.contractor-revision-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 17px;
+  border: 1px solid #f1d4d7;
+  border-radius: 9px;
+  background: var(--red-bg);
+}
+
+.contractor-revision-banner h2 {
+  margin: 4px 0;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.contractor-revision-banner p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+.contractor-submit-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 17px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.contractor-submit-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--blue-bg);
+  color: var(--navy);
+}
+
+.contractor-submit-card h2 {
+  margin: 4px 0;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.contractor-submit-card p {
+  max-width: 700px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .contractor-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contractor-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contractor-dashboard-header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .contractor-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contractor-revision-banner,
+  .contractor-submit-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* CONTRACTOR REPORTS */
+
+.contractor-reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contractor-reports-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.contractor-reports-header h1 {
+  margin: 4px 0 5px;
+  color: var(--text-primary);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.contractor-reports-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.contractor-reports-summary {
+  min-width: 115px;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.contractor-reports-summary span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+
+.contractor-reports-summary strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-primary);
+  font-size: 19px;
+}
+
+.contractor-reports-alert {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1px solid #f1d4d7;
+  border-radius: 8px;
+  background: var(--red-bg);
+}
+
+.contractor-reports-alert-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--red);
+}
+
+.contractor-reports-alert strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 10px;
+}
+
+.contractor-reports-alert p {
+  margin: 3px 0 0;
+  color: var(--text-secondary);
+  font-size: 8px;
+}
+
+.contractor-reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contractor-report-row {
+  display: grid;
+  grid-template-columns: 125px minmax(0, 1fr) auto;
+  gap: 15px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.contractor-report-row-revision {
+  border-color: #f1d4d7;
+}
+
+.contractor-report-thumb {
+  height: 102px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #eef1f6;
+}
+
+.contractor-report-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contractor-report-info {
+  min-width: 0;
+}
+
+.contractor-report-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.contractor-report-heading > div {
+  min-width: 0;
+}
+
+.contractor-report-heading span:first-child {
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.contractor-report-heading h2 {
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contractor-report-status {
+  flex-shrink: 0;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: var(--blue-bg);
+  color: var(--navy);
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.contractor-report-status-contractor_revision,
+.contractor-report-status-engineer_revision {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.contractor-report-status-published {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.contractor-report-info > p {
+  margin: 8px 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.contractor-report-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 15px;
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+.contractor-report-feedback {
+  display: flex;
+  gap: 8px;
+  margin-top: 9px;
+  padding: 8px 9px;
+  border-left: 2px solid var(--red);
+  background: var(--red-bg);
+}
+
+.contractor-report-feedback svg {
+  flex-shrink: 0;
+  color: var(--red);
+}
+
+.contractor-report-feedback strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 8px;
+}
+
+.contractor-report-feedback p {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+.contractor-report-action {
+  display: flex;
+  align-items: center;
+}
+
+.contractor-reports-empty {
+  padding: 45px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.contractor-reports-empty > svg {
+  color: var(--green);
+}
+
+.contractor-reports-empty h2 {
+  margin: 8px 0 4px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.contractor-reports-empty p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 9px;
+}
+
+@media (max-width: 800px) {
+  .contractor-report-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contractor-report-thumb {
+    height: 170px;
+  }
+
+  .contractor-report-action {
+    justify-content: flex-start;
+  }
+}
+
+/* Report review actions */
+.review-actions {
+  margin-top: 14px;
+  position: relative;
+  z-index: 5;
+}
+
+.report-action-panel-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 5;
+}
+
+.report-action-panel-footer .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  z-index: 6;
+}
+
+.report-action-panel-footer .button-success {
+  background: #16855b;
+  color: #ffffff;
+  border-color: #16855b;
+}
+
+.report-action-panel-footer .button-success:hover {
+  background: #116b49;
+  border-color: #116b49;
+}
+
+.report-action-panel-footer .button-danger {
+  background: #fff0f1;
+  color: #c93d4b;
+  border-color: #e7a6ad;
+}
+
+.report-action-panel-footer .button-danger:hover:not(:disabled) {
+  background: #c93d4b;
+  color: #ffffff;
+}
+
+.report-action-panel-footer .button-danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

@@ -17,6 +17,11 @@ export const roleNavigation = {
       section: "OVERVIEW",
       items: [
         {
+          label: "Review Queue",
+          path: "/builder-review",
+          icon: ClipboardCheck,
+        },
+        {
           label: "My Projects",
           path: "/projects",
           icon: BriefcaseBusiness,
@@ -116,7 +121,7 @@ export const roleNavigation = {
         },
         {
           label: "My Reports",
-          path: "/reports",
+          path: "/contractor-reports",
           icon: FileText,
         },
       ],
