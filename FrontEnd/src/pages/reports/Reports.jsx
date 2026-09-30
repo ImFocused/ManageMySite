@@ -6,6 +6,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Eye,
+  MapPin,
+  ArrowUpRight,
 } from "lucide-react";
 
 
@@ -128,7 +130,7 @@ function getReportsForRole(role, reports) {
 export default function Reports() {
   const navigate = useNavigate();
 
-  const { demoRole, reports } = useApp();
+  const { demoRole, reports, project } = useApp();
 
   const content = getPageContent(demoRole);
 
@@ -302,7 +304,7 @@ export default function Reports() {
 
           <div className="report-summary-card">
             <span>Project Progress</span>
-            <strong>42%</strong>
+            <strong>{project?.progress || 68}%</strong>
           </div>
 
         </div>
@@ -310,118 +312,177 @@ export default function Reports() {
 
       {/* REPORT LIST */}
 
-      <div className="reports-list">
+      
 
-        {visibleReports.length === 0 ? (
-          <div className="empty-reports">
-            <FileText size={28} />
+      {demoRole === "viewer" ? (
+        <div className="viewer-updates-list">
+          {visibleReports.length === 0 ? (
+            <div className="empty-reports">
+              <FileText size={28} />
 
-            <h3>No reports available</h3>
+              <h3>No published updates yet</h3>
 
-            <p>
-              There are currently no reports
-              requiring your attention.
-            </p>
-          </div>
-        ) : (
-          visibleReports.map((report) => (
+              <p>
+                Published construction updates will appear here
+                once they have completed the project approval process.
+              </p>
+            </div>
+          ) : (
+            visibleReports.map((report) => (
+              <article
+                className="viewer-report-card"
+                key={report.id}
+              >
+                <div className="viewer-report-photo">
+                  {report.photos?.[0]?.url ? (
+                    <img
+                      src={report.photos[0].url}
+                      alt={
+                        report.photos[0].label ||
+                        report.title
+                      }
+                    />
+                  ) : (
+                    <FileText size={28} />
+                  )}
 
-            <div
-              className="report-list-card"
-              key={report.id}
-            >
+                  <span className="viewer-report-photo-count">
+                    {report.photos?.length || 0} photo
+                    {report.photos?.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
 
-              <div className="report-icon">
-                <FileText size={20} />
-              </div>
-
-              <div className="report-main">
-
-                <div className="report-title-row">
-
-                  <div>
-
-                    <span className="report-id">
-                      REPORT #{report.id}
+                <div className="viewer-report-content">
+                  <div className="viewer-report-topline">
+                    <span className="viewer-published-badge">
+                      <CheckCircle2 size={13} />
+                      Published
                     </span>
 
-                    <h3>{report.title}</h3>
-
+                    <span className="viewer-report-date">
+                      {report.submittedAt}
+                    </span>
                   </div>
 
-                  <span
-                    className={`report-status ${getStatusClass(
-                      report.status
-                    )}`}
-                  >
-                    {getStatusLabel(
-                      report.status
-                    )}
-                  </span>
+                  <h3>{report.title}</h3>
 
+                  <div className="viewer-report-location">
+                    <MapPin size={14} />
+                    {report.location || "Project site"}
+                  </div>
+
+                  <p>
+                    {report.description}
+                  </p>
+
+                  <div className="viewer-report-footer">
+                    <span>
+                      Published update
+                    </span>
+
+                    <button
+                      type="button"
+                      className="viewer-report-view-button"
+                      onClick={() =>
+                        navigate(`/reports/${report.id}`)
+                      }
+                    >
+                      View Update
+                      <ArrowUpRight size={15} />
+                    </button>
+                  </div>
                 </div>
+              </article>
+            ))
+          )}
+        </div>
+      ) : (
+        <div className="reports-list">
+          {visibleReports.length === 0 ? (
+            <div className="empty-reports">
+              <FileText size={28} />
 
-                <p>{report.location}</p>
+              <h3>No reports available</h3>
 
-                <div className="report-meta">
-
-                  <span>
-                    Submitted by{" "}
-                    {report.submittedBy}
-                  </span>
-
-                  <span>
-                    <Clock3 size={13} />
-                    {report.submittedAt}
-                  </span>
-
-                  <span>
-                    {report.photos.length} photo
-                    {report.photos.length !== 1
-                      ? "s"
-                      : ""}
-                  </span>
-
-                </div>
-
-              </div>
-
-              <button
-                className="report-view-button"
-                onClick={() =>
-                  navigate(
-                    `/reports/${report.id}`
-                  )
-                }
-              >
-
-                {demoRole === "viewer" ? (
-                  <>
-                    <Eye size={15} />
-                    View Update
-                  </>
-                ) : demoRole ===
-                  "projectManager" ? (
-                  <>
-                    View Report
-                    <ChevronRight size={17} />
-                  </>
-                ) : (
-                  <>
-                    View Report
-                    <ChevronRight size={17} />
-                  </>
-                )}
-
-              </button>
-
+              <p>
+                There are currently no reports
+                requiring your attention.
+              </p>
             </div>
+          ) : (
+            visibleReports.map((report) => (
+              <div
+                className="report-list-card"
+                key={report.id}
+              >
+                <div className="report-icon">
+                  <FileText size={20} />
+                </div>
 
-          ))
-        )}
+                <div className="report-main">
+                  <div className="report-title-row">
+                    <div>
+                      <span className="report-id">
+                        REPORT #{report.id}
+                      </span>
 
-      </div>
+                      <h3>{report.title}</h3>
+                    </div>
 
+                    <span
+                      className={`report-status ${getStatusClass(
+                        report.status
+                      )}`}
+                    >
+                      {getStatusLabel(report.status)}
+                    </span>
+                  </div>
+
+                  <p>{report.location}</p>
+
+                  <div className="report-meta">
+                    <span>
+                      Submitted by{" "}
+                      {report.submittedBy}
+                    </span>
+
+                    <span>
+                      <Clock3 size={13} />
+                      {report.submittedAt}
+                    </span>
+
+                    <span>
+                      {report.photos.length} photo
+                      {report.photos.length !== 1
+                        ? "s"
+                        : ""}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  className="report-view-button"
+                  onClick={() =>
+                    navigate(`/reports/${report.id}`)
+                  }
+                >
+                  {demoRole === "projectManager" ? (
+                    <>
+                      View Report
+                      <ChevronRight size={17} />
+                    </>
+                  ) : (
+                    <>
+                      View Report
+                      <ChevronRight size={17} />
+                    </>
+                  )}
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

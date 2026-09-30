@@ -8,6 +8,7 @@ import {
 import { useApp } from "../../context/AppContext";
 import EngineerDashboard from "./EngineerDashboard";
 import ContractorDashboard from "./ContractorDashboard";
+import ViewerDashboard from "./ViewerDashboard";
 
 export default function Dashboard() {
     const { demoRole } = useApp();
@@ -17,6 +18,9 @@ export default function Dashboard() {
     }
     if (demoRole === "contractor") {
     return <ContractorDashboard />;
+    }
+    if(demoRole === "viewer") {
+    return <ViewerDashboard />;
     }
   return (
     <div className="dashboard-page">

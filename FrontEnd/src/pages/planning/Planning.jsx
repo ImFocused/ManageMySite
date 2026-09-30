@@ -5,9 +5,13 @@ import {
   Clock3,
   AlertTriangle,
   ArrowRight,
+  ChevronDown,
+  ChevronRight,
+  Flag,
 } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { projects } from "../../data/mock";
+import { useState } from "react";
 
 const planningMilestones = [
   {
@@ -56,6 +60,175 @@ const planningMilestones = [
     status: "upcoming",
   },
 ];
+
+const viewerGanttGroups = [
+  {
+    id: "foundation",
+    name: "Foundation",
+    progress: 100,
+    status: "completed",
+    start: "2026-01-12",
+    end: "2026-02-28",
+    tasks: [
+      {
+        name: "Excavation",
+        start: "2026-01-12",
+        end: "2026-01-28",
+        progress: 100,
+        status: "completed",
+      },
+      {
+        name: "Footings & foundation",
+        start: "2026-01-29",
+        end: "2026-02-18",
+        progress: 100,
+        status: "completed",
+      },
+      {
+        name: "Foundation inspection",
+        start: "2026-02-19",
+        end: "2026-02-28",
+        progress: 100,
+        status: "completed",
+        milestone: true,
+      },
+    ],
+  },
+
+  {
+    id: "structure",
+    name: "Structure",
+    progress: 72,
+    status: "in_progress",
+    start: "2026-03-01",
+    end: "2026-06-30",
+    tasks: [
+      {
+        name: "Columns",
+        start: "2026-03-01",
+        end: "2026-04-30",
+        progress: 100,
+        status: "completed",
+      },
+      {
+        name: "Slabs",
+        start: "2026-05-01",
+        end: "2026-06-15",
+        progress: 100,
+        status: "completed",
+      },
+      {
+        name: "Masonry",
+        start: "2026-06-16",
+        end: "2026-06-30",
+        progress: 72,
+        status: "in_progress",
+      },
+    ],
+  },
+
+  {
+    id: "electrical",
+    name: "Electrical",
+    progress: 72,
+    status: "in_progress",
+    start: "2026-07-01",
+    end: "2026-10-15",
+    tasks: [
+      {
+        name: "Electrical conduits",
+        start: "2026-07-01",
+        end: "2026-08-31",
+        progress: 100,
+        status: "completed",
+      },
+      {
+        name: "Wiring installation",
+        start: "2026-09-01",
+        end: "2026-10-15",
+        progress: 55,
+        status: "in_progress",
+      },
+    ],
+  },
+
+  {
+    id: "plumbing",
+    name: "Plumbing",
+    progress: 20,
+    status: "upcoming",
+    start: "2026-09-15",
+    end: "2026-10-31",
+    tasks: [
+      {
+        name: "Plumbing rough-in",
+        start: "2026-09-15",
+        end: "2026-10-15",
+        progress: 35,
+        status: "in_progress",
+      },
+      {
+        name: "Testing & inspection",
+        start: "2026-10-16",
+        end: "2026-10-31",
+        progress: 0,
+        status: "upcoming",
+        milestone: true,
+      },
+    ],
+  },
+
+  {
+    id: "finishing",
+    name: "Finishing",
+    progress: 0,
+    status: "upcoming",
+    start: "2026-10-01",
+    end: "2026-11-30",
+    tasks: [
+      {
+        name: "Internal finishing",
+        start: "2026-10-01",
+        end: "2026-10-31",
+        progress: 0,
+        status: "upcoming",
+      },
+      {
+        name: "Final finishing & handover",
+        start: "2026-11-01",
+        end: "2026-11-30",
+        progress: 0,
+        status: "upcoming",
+        milestone: true,
+      },
+    ],
+  },
+];
+
+const GANTT_START = new Date("2026-01-12T00:00:00Z");
+const GANTT_END = new Date("2026-11-30T23:59:59Z");
+
+function getGanttPosition(start, end) {
+  const startDate = new Date(`${start}T00:00:00Z`);
+  const endDate = new Date(`${end}T23:59:59Z`);
+
+  const totalDuration =
+    GANTT_END.getTime() - GANTT_START.getTime();
+
+  const startOffset =
+    startDate.getTime() - GANTT_START.getTime();
+
+  const duration =
+    endDate.getTime() - startDate.getTime();
+
+  const left = (startOffset / totalDuration) * 100;
+  const width = (duration / totalDuration) * 100;
+
+  return {
+    left: Math.max(0, left),
+    width: Math.max(1, width),
+  };
+}
 
 const workItems = [
   {
@@ -170,6 +343,211 @@ function getVisibleWork(role) {
     return workItems;
   }
   return workItems;
+}
+
+function ViewerGantt() {
+  const [expandedGroups, setExpandedGroups] = useState(
+    viewerGanttGroups.map((group) => group.id)
+  );
+
+  function toggleGroup(id) {
+    setExpandedGroups((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : [...current, id]
+    );
+  }
+
+  return (
+    <section className="viewer-gantt-panel">
+      <div className="viewer-gantt-header">
+        <div>
+          <p className="section-kicker">DETAILED PROJECT SCHEDULE</p>
+          <h2>Construction Gantt</h2>
+          <p>
+            Follow each major construction activity from start to
+            completion.
+          </p>
+        </div>
+
+        <div className="viewer-gantt-legend">
+          <span>
+            <i className="gantt-legend-dot completed" />
+            Completed
+          </span>
+
+          <span>
+            <i className="gantt-legend-dot active" />
+            In progress
+          </span>
+
+          <span>
+            <i className="gantt-legend-dot upcoming" />
+            Upcoming
+          </span>
+        </div>
+      </div>
+
+      <div className="viewer-gantt-scroll">
+        <div className="viewer-gantt">
+          <div className="gantt-label-column">
+            <div className="gantt-label-header">
+              WORK BREAKDOWN
+            </div>
+
+            {viewerGanttGroups.map((group) => {
+              const expanded = expandedGroups.includes(group.id);
+
+              return (
+                <div key={group.id}>
+                  <button
+                    type="button"
+                    className="gantt-group-label"
+                    onClick={() => toggleGroup(group.id)}
+                  >
+                    {expanded ? (
+                      <ChevronDown size={16} />
+                    ) : (
+                      <ChevronRight size={16} />
+                    )}
+
+                    <strong>{group.name}</strong>
+
+                    <span>{group.progress}%</span>
+                  </button>
+
+                  {expanded &&
+                    group.tasks.map((task) => (
+                      <div
+                        className="gantt-task-label"
+                        key={task.name}
+                      >
+                        {task.milestone && (
+                          <Flag size={12} />
+                        )}
+
+                        <span>{task.name}</span>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="gantt-chart-column">
+            <div className="gantt-month-header">
+              <span>JAN</span>
+              <span>FEB</span>
+              <span>MAR</span>
+              <span>APR</span>
+              <span>MAY</span>
+              <span>JUN</span>
+              <span>JUL</span>
+              <span>AUG</span>
+              <span>SEP</span>
+              <span>OCT</span>
+              <span>NOV</span>
+            </div>
+
+            <div className="gantt-chart-body">
+              {viewerGanttGroups.map((group) => {
+                const expanded = expandedGroups.includes(group.id);
+
+                return (
+                  <div key={group.id}>
+                    <div className="gantt-group-row">
+                      {(() => {
+                        const position = getGanttPosition(
+                          group.start,
+                          group.end
+                        );
+
+                        return (
+                          <div
+                            className={`gantt-group-bar ${group.status}`}
+                            style={{
+                              left: `${position.left}%`,
+                              width: `${position.width}%`,
+                            }}
+                          >
+                            <div
+                              className="gantt-progress-fill"
+                              style={{
+                                width: `${group.progress}%`,
+                              }}
+                            />
+
+                            {group.progress > 0 && (
+                              <span>{group.progress}%</span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                    
+
+                    {expanded &&
+                      group.tasks.map((task) => (
+                        <div className="gantt-task-row">
+                            {(() => {
+                              const position = getGanttPosition(
+                                task.start,
+                                task.end
+                              );
+
+                              return (
+                                <div
+                                  className={`gantt-task-bar ${task.status}`}
+                                  style={{
+                                    left: `${position.left}%`,
+                                    width: `${position.width}%`,
+                                  }}
+                                >
+                                  <div
+                                    className="gantt-progress-fill"
+                                    style={{
+                                      width: `${task.progress}%`,
+                                    }}
+                                  />
+
+                                  {task.progress > 20 && (
+                                    <span>{task.progress}%</span>
+                                  )}
+                                </div>
+                              );
+                            })()}
+                          </div>
+                      ))}
+                  </div>
+                );
+              })}
+
+              <div className="gantt-today-line">
+                <span>Today</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="viewer-gantt-footer">
+        <div>
+          <strong>Project period</strong>
+          <span>12 Jan 2026 — 30 Nov 2026</span>
+        </div>
+
+        <div>
+          <strong>Overall progress</strong>
+          <span>68% complete</span>
+        </div>
+
+        <div>
+          <strong>Expected completion</strong>
+          <span>30 Nov 2026</span>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default function Planning() {
@@ -356,20 +734,7 @@ export default function Planning() {
       </section>
 
       {demoRole === "viewer" && (
-        <section className="viewer-completion-card">
-          <div>
-            <p className="section-kicker">EXPECTED COMPLETION</p>
-            <h2>{activeProject.endDate}</h2>
-            <p>
-              The current project schedule targets completion by this date.
-            </p>
-          </div>
-
-          <div className="viewer-completion-progress">
-            <strong>{activeProject.progress}%</strong>
-            <span>Complete</span>
-          </div>
-        </section>
+        <ViewerGantt />
       )}
     </div>
   );
