@@ -99,7 +99,7 @@ export const roleNavigation = {
   {
     section: "PROJECT",
     items: [
-      { label: "Queries", path: "/queries", icon: MessageSquare },
+      
       { label: "Notifications", path: "/notifications", icon: Bell },
     ],
   },
@@ -135,11 +135,7 @@ export const roleNavigation = {
           path: "/planning",
           icon: BriefcaseBusiness,
         },
-        {
-          label: "Feedback",
-          path: "/queries",
-          icon: MessageSquare,
-        },
+        
         {
           label: "Notifications",
           path: "/notifications",

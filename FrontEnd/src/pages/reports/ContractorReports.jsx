@@ -144,7 +144,7 @@ export default function ContractorReports() {
                     className={
                       isRevision
                         ? "button button-danger"
-                        : "button button-secondary"
+                        : "secondary-button"
                     }
                     onClick={() =>
                       navigate(`/reports/${report.id}`)

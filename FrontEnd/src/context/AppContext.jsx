@@ -14,6 +14,7 @@ export function AppProvider({ children }) {
   );
 
   const [reports, setReports] = useState(initialReports);
+  const [queries, setQueries] = useState([]);
 
   const user = demoUsers[demoRole];
   const membership = demoMemberships[demoRole];
@@ -38,7 +39,34 @@ export function AppProvider({ children }) {
           : report
       )
     );
+    
   }
+  function addQuery({ subject, message }) {
+      const newQuery = {
+        id: Date.now(),
+        subject,
+        message,
+        status: "Awaiting Response",
+        response: "",
+        submittedAt: new Date().toISOString(),
+      };
+
+      setQueries((currentQueries) => [...currentQueries, newQuery]);
+    }
+    function respondToQuery(queryId, response) {
+      setQueries((currentQueries) =>
+        currentQueries.map((query) =>
+          query.id === queryId
+            ? {
+                ...query,
+                response,
+                status: "Responded",
+                respondedAt: new Date().toISOString(),
+              }
+            : query
+        )
+      );
+    }
 
   function approveReport(reportId, feedback = "") {
     updateReport(reportId, {
@@ -121,6 +149,9 @@ export function AppProvider({ children }) {
         user,
         membership,
         project,
+        queries,
+        addQuery,
+        respondToQuery,
 
         reports,
         updateReport,

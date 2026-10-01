@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppProvider } from "./context/AppContext";
 
+import Login from "./pages/auth/Login";
 import AppShell from "./components/layout/AppShell";
 import Dashboard from "./pages/dashboard/Dashboard";
 import MyProjects from "./pages/projects/MyProjects";
@@ -11,7 +13,7 @@ import ReviewQueue from "./pages/reports/ReviewQueue";
 import BuilderReviewQueue from "./pages/reports/BuilderReviewQueue";
 import ContractorReports from "./pages/reports/ContractorReports";
 import Team from "./pages/team/Team";
-
+import Queries from "./pages/queries/Queries";
 import "./App.css";
 
 function Placeholder({ title }) {
@@ -29,137 +31,141 @@ function Placeholder({ title }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={<Navigate to="/dashboard" replace />}
-        />
+    <AppProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to="/login" replace />}
+          />
 
-        <Route
-          path="/dashboard"
-          element={
+          <Route path="/login" element={<Login />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <AppShell>
+                <Dashboard />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/planning"
+            element={
+              <AppShell>
+                <Planning />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/team"
+            element={
+              <AppShell>
+                <Team />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/queries"
+            element={
+              <AppShell>
+                <Queries />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/notifications"
+            element={
+              <AppShell>
+                <Placeholder title="Notifications" />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/audit"
+            element={
+              <AppShell>
+                <Placeholder title="Audit History" />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <AppShell>
+                <Placeholder title="Settings" />
+              </AppShell>
+            }
+          />
+
+          <Route 
+            path="/projects" 
+            element={
+              <AppShell>
+                <MyProjects />
+              </AppShell>
+            }  
+          />
+
+          <Route
+            path="/projects/:projectId"
+            element={
             <AppShell>
-              <Dashboard />
+              <ProjectWorkspace />
             </AppShell>
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/planning"
-          element={
-            <AppShell>
-              <Planning />
-            </AppShell>
-          }
-        />
+          <Route
+            path="/review-queue"
+            element={<AppShell><ReviewQueue /></AppShell>}
+          />
 
-        <Route
-          path="/team"
-          element={
-            <AppShell>
-              <Team />
-            </AppShell>
-          }
-        />
+          <Route
+            path="/reports"
+            element={
+              <AppShell>
+                <Reports />
+              </AppShell>
+            }
+          />
 
-        <Route
-          path="/queries"
-          element={
-            <AppShell>
-              <Placeholder title="Queries" />
-            </AppShell>
-          }
-        />
+          <Route
+            path="/reports/:reportId"
+            element={
+              <AppShell>
+                <ReportDetail />
+              </AppShell>
+            }
+          />
 
-        <Route
-          path="/notifications"
-          element={
-            <AppShell>
-              <Placeholder title="Notifications" />
-            </AppShell>
-          }
-        />
+          <Route
+            path="/builder-review"
+            element={
+              <AppShell>
+                <BuilderReviewQueue />
+              </AppShell>
+            }
+          />
 
-        <Route
-          path="/audit"
-          element={
-            <AppShell>
-              <Placeholder title="Audit History" />
-            </AppShell>
-          }
-        />
+          <Route
+            path="/contractor-reports"
+            element={
+              <AppShell>
+                <ContractorReports />
+              </AppShell>
+            }
+          />
 
-        <Route
-          path="/settings"
-          element={
-            <AppShell>
-              <Placeholder title="Settings" />
-            </AppShell>
-          }
-        />
-
-        <Route 
-          path="/projects" 
-          element={
-            <AppShell>
-              <MyProjects />
-            </AppShell>
-          }  
-        />
-
-        <Route
-          path="/projects/:projectId"
-          element={
-          <AppShell>
-            <ProjectWorkspace />
-          </AppShell>
-          }
-        />
-
-        <Route
-          path="/review-queue"
-          element={<AppShell><ReviewQueue /></AppShell>}
-        />
-
-        <Route
-          path="/reports"
-          element={
-            <AppShell>
-              <Reports />
-            </AppShell>
-          }
-        />
-
-        <Route
-          path="/reports/:reportId"
-          element={
-            <AppShell>
-              <ReportDetail />
-            </AppShell>
-          }
-        />
-
-        <Route
-          path="/builder-review"
-          element={
-            <AppShell>
-              <BuilderReviewQueue />
-            </AppShell>
-          }
-        />
-
-        <Route
-          path="/contractor-reports"
-          element={
-            <AppShell>
-              <ContractorReports />
-            </AppShell>
-          }
-        />
-
-        
-      </Routes>
-    </BrowserRouter>
+          
+        </Routes>
+      </BrowserRouter>
+    </AppProvider>
   );
 }

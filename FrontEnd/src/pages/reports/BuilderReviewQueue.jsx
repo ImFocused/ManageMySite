@@ -168,7 +168,7 @@ export default function BuilderReviewQueue() {
 
               <div className="builder-review-card-action">
                 <button
-                  className="button button-primary"
+                  className="primary-button"
                   onClick={() => navigate(`/reports/${report.id}`)}
                 >
                   Review Report
