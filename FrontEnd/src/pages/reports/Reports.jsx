@@ -236,6 +236,17 @@ export default function Reports() {
             <strong>{publishedReports}</strong>
           </div>
 
+          <div className="report-summary-card">
+          <span>Withdrawn</span>
+          <strong>
+            {
+              reports.filter(
+                (report) => report.status === "withdrawn"
+              ).length
+            }
+          </strong>
+        </div>
+
         </div>
       )}
 
@@ -483,6 +494,80 @@ export default function Reports() {
           )}
         </div>
       )}
+      
+      {demoRole === "builder" && (
+        <section className="withdrawn-reports-section">
+          <div className="withdrawn-reports-header">
+            <div>
+              <h2>Withdrawn Reports</h2>
+              <p>Reports removed from Viewer access</p>
+            </div>
+            <span className="withdrawn-count">
+              {
+                reports.filter(
+                  (report) => report.status === "withdrawn"
+                ).length
+              }
+            </span>
+          </div>
+
+          {reports.filter(
+            (report) => report.status === "withdrawn"
+          ).length === 0 ? (
+            <div className="withdrawn-empty">
+              No withdrawn reports yet.
+            </div>
+          ) : (
+            <div className="reports-list">
+              {reports
+                .filter((report) => report.status === "withdrawn")
+                .map((report) => (
+                  <div className="report-list-card" key={report.id}>
+                    <div className="report-icon">
+                      <FileText size={20} />
+                    </div>
+
+                    <div className="report-main">
+                      <div className="report-title-row">
+                        <div>
+                          <span className="report-id">
+                            REPORT #{report.id}
+                          </span>
+                          <h3>{report.title}</h3>
+                        </div>
+
+                        <span className="report-status">
+                          Withdrawn
+                        </span>
+                      </div>
+
+                      <p>{report.location}</p>
+
+                      <div className="report-meta">
+                        <span>
+                          Withdrawn by {report.withdrawnBy || "Builder"}
+                        </span>
+                        <span>
+                          {report.withdrawalReason || "No reason recorded"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      className="report-view-button"
+                      onClick={() => navigate(`/reports/${report.id}`)}
+                    >
+                      View Report
+                      <ChevronRight size={17} />
+                    </button>
+                  </div>
+                ))}
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }
+
+

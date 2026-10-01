@@ -53,7 +53,9 @@ export default function ReportDetail() {
   builderApproveReport,
   builderDeclineReport,
   publishReport,
+  withdrawReport,
   resubmitReport,
+  republishReport,
 } = useApp();
 
   const report = reports.find(
@@ -98,6 +100,12 @@ export default function ReportDetail() {
   
   const canPublish = 
         demoRole === "builder" && report.status === "ready_to_publish";
+
+  const canWithdraw =
+  demoRole === "builder" && report.status === "published";
+
+  const canRepublish =
+  demoRole === "builder" && report.status === "withdrawn";
 
 
   const canContractorResubmit =
@@ -414,6 +422,54 @@ export default function ReportDetail() {
         </section>
       )}
 
+  
+      {canWithdraw && (
+        <WithdrawReportPanel
+          report={report}
+          onWithdraw={(reason) => {
+            withdrawReport(report.id, reason);
+            navigate("/builder-review");
+          }}
+        />
+      )}
+
+      
+      {canRepublish && (
+        <section className="report-action-panel">
+          <div className="report-action-panel-header">
+            <div>
+              <span className="page-eyebrow">WITHDRAWN REPORT</span>
+              <h2>Republish to Viewers</h2>
+              <p>
+                This will make the report visible to project viewers again.
+                Its previous withdrawal record will be retained.
+              </p>
+            </div>
+          </div>
+
+          <div className="report-action-panel-footer">
+            <button
+              type="button"
+              className="button button-success"
+              onClick={() => {
+                const confirmed = window.confirm(
+                  "Are you sure you want to republish this report to viewers?"
+                );
+
+                if (!confirmed) return;
+
+                republishReport(report.id);
+                navigate("/reports");
+              }}
+            >
+              Republish to Viewers
+            </button>
+          </div>
+        </section>
+      )}
+
+
+
       
       {/* CONTRACTOR */}
 
@@ -620,6 +676,74 @@ export default function ReportDetail() {
       )}
 
     </div>
+  );
+}
+
+
+function WithdrawReportPanel({ report, onWithdraw }) {
+  const [reason, setReason] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  function handleWithdraw() {
+    if (!reason.trim()) return;
+    onWithdraw(reason.trim());
+  }
+
+  return (
+    <section className="report-action-panel">
+      <div className="report-action-panel-header">
+        <div>
+          <span className="page-eyebrow">PUBLISHED UPDATE</span>
+          <h2>Withdraw from Viewers</h2>
+          <p>
+            This will remove the report from the Viewer’s published updates.
+            The report and its history will remain available to the project team.
+          </p>
+        </div>
+      </div>
+
+      <label className="review-feedback-label">
+        Reason for withdrawal
+      </label>
+
+      <textarea
+        className="review-feedback-input"
+        placeholder="Explain why this report needs to be withdrawn..."
+        value={reason}
+        onChange={(event) => setReason(event.target.value)}
+      />
+
+      {!showConfirmation ? (
+        <div className="report-action-panel-footer">
+          <button
+            type="button"
+            className="button button-danger"
+            disabled={!reason.trim()}
+            onClick={() => setShowConfirmation(true)}
+          >
+            Withdraw from Viewers
+          </button>
+        </div>
+      ) : (
+        <div className="report-action-panel-footer">
+          <p>Are you sure you want to withdraw this report?</p>
+          <button
+            type="button"
+            className="button button-danger"
+            onClick={handleWithdraw}
+          >
+            Confirm Withdrawal
+          </button>
+          <button
+            type="button"
+            className="button button-secondary"
+            onClick={() => setShowConfirmation(false)}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 

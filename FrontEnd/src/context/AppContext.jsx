@@ -86,6 +86,23 @@ export function AppProvider({ children }) {
     });
   }
 
+  function republishReport(reportId) {
+  updateReport(reportId, {
+    status: "published",
+    republishedAt: new Date().toISOString(),
+    republishedBy: user?.name || "Builder",
+  });
+}
+
+  function withdrawReport(reportId, reason) {
+  updateReport(reportId, {
+    status: "withdrawn",
+    withdrawalReason: reason,
+    withdrawnAt: new Date().toISOString(),
+    withdrawnBy: user?.name || "Builder",
+  });
+}
+
   function resubmitReport(reportId, description = "") {
     updateReport(reportId, {
       status: "engineer_review",
@@ -114,6 +131,9 @@ export function AppProvider({ children }) {
         builderApproveReport,
         builderDeclineReport,
         publishReport,
+        withdrawReport,
+
+        republishReport,
 
         resubmitReport,
       }}

@@ -10,6 +10,7 @@ import Planning from "./pages/planning/Planning";
 import ReviewQueue from "./pages/reports/ReviewQueue";
 import BuilderReviewQueue from "./pages/reports/BuilderReviewQueue";
 import ContractorReports from "./pages/reports/ContractorReports";
+import Team from "./pages/team/Team";
 
 import "./App.css";
 
@@ -57,7 +58,7 @@ export default function App() {
           path="/team"
           element={
             <AppShell>
-              <Placeholder title="Team" />
+              <Team />
             </AppShell>
           }
         />
