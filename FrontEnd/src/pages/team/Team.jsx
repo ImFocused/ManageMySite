@@ -12,7 +12,8 @@ import { useApp } from "../../context/AppContext";
 
 
 export default function Team() {
-  const { project } = useApp();
+  const { project , demoRole } = useApp();
+  const canManageTeam = demoRole === "builder";
   const [editingMember, setEditingMember] = useState(null);
   const [editedRole, setEditedRole] = useState("");
   const [search, setSearch] = useState("");
@@ -87,14 +88,16 @@ export default function Team() {
           </p>
         </div>
 
-        <button
-            className="button button-primary"
+        {canManageTeam && (
+          <button
+            className="primary-button"
             type="button"
             onClick={() => setShowInvite(true)}
-            >
-          <UserPlus size={17} />
-          Invite Member
-        </button>
+          >
+            <UserPlus size={17} />
+            Invite Member
+          </button>
+        )}
       </div>
 
       <div className="team-project-strip">
@@ -202,44 +205,50 @@ export default function Team() {
                     </button>
 
                     {selectedMember === member.id && (
-                        <div className="team-action-menu">
-                        <button
-                            type="button"
-                            onClick={() => {
-                            alert(`Member: ${member.name}\nRole: ${member.role}`);
-                            setSelectedMember(null);
-                            }}
-                        >
-                            View member
-                        </button>
+                      <div className="team-action-menu">
                         <button
                           type="button"
-                          className="team-remove-option"
                           onClick={() => {
-                            const confirmed = window.confirm(
-                              `Remove ${member.name} from this project?`
-                            );
-
-                            if (confirmed) {
-                              removeMember(member.id);
-                            }
-
+                            alert(`Member: ${member.name}\nRole: ${member.role}`);
                             setSelectedMember(null);
                           }}
                         >
-                          Remove member
+                          View member
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                              setEditingMember(member);
-                              setEditedRole(member.role);
-                              setSelectedMember(null);
-                            }}
-                        >
-                            Edit role
-                        </button>
-                        </div>
+
+                        {canManageTeam && (
+                          <>
+                            <button
+                              type="button"
+                              className="team-remove-option"
+                              onClick={() => {
+                                const confirmed = window.confirm(
+                                  `Remove ${member.name} from this project?`
+                                );
+
+                                if (confirmed) {
+                                  removeMember(member.id);
+                                }
+
+                                setSelectedMember(null);
+                              }}
+                            >
+                              Remove member
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingMember(member);
+                                setEditedRole(member.role);
+                                setSelectedMember(null);
+                              }}
+                            >
+                              Edit role
+                            </button>
+                          </>
+                        )}
+                      </div>
                     )}
                     </div>
                 )}
@@ -337,12 +346,12 @@ export default function Team() {
                 <div className="team-modal-actions">
                 <button
                     type="button"
-                    className="button button-secondary"
+                    className="secondary-button"
                     onClick={() => setShowInvite(false)}
                 >
                     Cancel
                 </button>
-                <button type="submit" className="button button-primary">
+                <button type="submit" className="primary-button">
                     Continue
                 </button>
                 </div>
@@ -399,12 +408,12 @@ export default function Team() {
                 <div className="team-modal-actions">
                   <button
                     type="button"
-                    className="button button-secondary"
+                    className="secondary-button"
                     onClick={() => setEditingMember(null)}
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="button button-primary">
+                  <button type="submit" className="primary-button">
                     Save Changes
                   </button>
                 </div>
