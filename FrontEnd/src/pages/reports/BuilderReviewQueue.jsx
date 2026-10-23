@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
+import { handleImageError, getReportPhoto } from "../../utils/imageUtils";
 
 export default function BuilderReviewQueue() {
   const navigate = useNavigate();
@@ -130,8 +131,9 @@ export default function BuilderReviewQueue() {
             <article className="builder-review-card" key={report.id}>
               <div className="builder-review-photo">
                 <img
-                  src={report.photos?.[0]?.url}
+                  src={getReportPhoto(report, 0)}
                   alt={report.photos?.[0]?.label || report.title}
+                  onError={handleImageError}
                 />
               </div>
 

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
+import { handleImageError, getReportPhoto } from "../../utils/imageUtils";
 
 const recentActivity = [
   {
@@ -101,7 +102,7 @@ export default function EngineerDashboard() {
           </div>
 
           <button
-            className="engineer-primary-button"
+            className="primary-button engineer-primary-button"
             onClick={() => navigate("/review-queue")}
           >
             Open Review Queue
@@ -110,7 +111,7 @@ export default function EngineerDashboard() {
         </section>
       )}
 
-      {/* Summary */}
+      {/* Stats */}
       <section className="engineer-stats-grid">
 
         <div className="engineer-stat-card attention">
@@ -237,11 +238,12 @@ export default function EngineerDashboard() {
 
                   <div className="engineer-report-thumbnail">
                     <img
-                      src={report.photos?.[0]?.url}
+                      src={getReportPhoto(report, 0)}
                       alt={
                         report.photos?.[0]?.label ||
                         report.title
                       }
+                      onError={handleImageError}
                     />
                   </div>
 

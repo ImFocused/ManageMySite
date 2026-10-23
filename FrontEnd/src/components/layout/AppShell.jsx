@@ -18,6 +18,8 @@ export default function AppShell({ children }) {
     changeDemoRole,
     user,
     project,
+    projects = [],
+    changeProject,
   } = useApp();
 
   const navigation =
@@ -63,18 +65,25 @@ export default function AppShell({ children }) {
             </span>
 
             <strong>
-              {project.name}
+              <select
+                className="project-selector-dropdown"
+                value={project?.id || ""}
+                onChange={(e) => changeProject && changeProject(e.target.value)}
+                aria-label="Select project"
+              >
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
             </strong>
 
             <span className="project-type">
-              {project.type === "private"
-                ? "Private Project"
-                : "Government Project"}
+              Private Project
             </span>
 
           </div>
-
-          <ChevronDown size={17} />
 
         </div>
 
@@ -228,9 +237,7 @@ export default function AppShell({ children }) {
                 </strong>
 
                 <span>
-                  {project.type === "private"
-                    ? "Private Project"
-                    : "Government Project"}
+                  Private Project
                 </span>
               </div>
 
@@ -262,13 +269,7 @@ function getInitials(name) {
 
 function getPageTitle(pathname, role) {
   if (pathname.startsWith("/reports")) {
-    if (
-      role === "engineer" ||
-      role === "teamEngineer" ||
-      role === "je" ||
-      role === "de" ||
-      role === "ee"
-    ) {
+    if (role === "engineer") {
       return "Review Queue";
     }
 
@@ -276,7 +277,7 @@ function getPageTitle(pathname, role) {
   }
 
   if (pathname.startsWith("/planning")) {
-    return "Planning";
+    return "Progress";
   }
 
   if (pathname.startsWith("/team")) {
@@ -285,6 +286,14 @@ function getPageTitle(pathname, role) {
 
   if (pathname.startsWith("/queries")) {
     return "Queries";
+  }
+
+  if (pathname.startsWith("/resources")) {
+    return "Resources";
+  }
+
+  if (pathname.startsWith("/submit-report")) {
+    return "Submit Report";
   }
 
   if (pathname.startsWith("/notifications")) {

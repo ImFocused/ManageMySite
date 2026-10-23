@@ -5,10 +5,10 @@ import {
   Users,
   MessageSquare,
   Bell,
-  History,
-  Settings,
   ClipboardCheck,
   BriefcaseBusiness,
+  PackageOpen,
+  FilePlus2,
 } from "lucide-react";
 
 export const roleNavigation = {
@@ -37,7 +37,7 @@ export const roleNavigation = {
           icon: FileText,
         },
         {
-          label: "Planning",
+          label: "Progress",
           path: "/planning",
           icon: CalendarDays,
         },
@@ -57,6 +57,11 @@ export const roleNavigation = {
           path: "/queries",
           icon: MessageSquare,
         },
+        {
+          label: "Resources",
+          path: "/resources",
+          icon: PackageOpen,
+        },
       ],
     },
 
@@ -68,42 +73,32 @@ export const roleNavigation = {
           path: "/notifications",
           icon: Bell,
         },
-        {
-          label: "Audit",
-          path: "/audit",
-          icon: History,
-        },
-        {
-          label: "Settings",
-          path: "/settings",
-          icon: Settings,
-        },
       ],
     },
   ],
 
-   engineer: [
-  {
-    section: "WORKSPACE",
-    items: [
-      { label: "My Projects", path: "/projects", icon: BriefcaseBusiness },
-      { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-      {
-        label: "Review Queue",
-        path: "/review-queue",
-        icon: ClipboardCheck,
-      },
-      { label: "Reports", path: "/reports", icon: FileText },
-    ],
-  },
-  {
-    section: "PROJECT",
-    items: [
-      
-      { label: "Notifications", path: "/notifications", icon: Bell },
-    ],
-  },
-],
+  engineer: [
+    {
+      section: "WORKSPACE",
+      items: [
+        { label: "My Projects", path: "/projects", icon: BriefcaseBusiness },
+        { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+        {
+          label: "Review Queue",
+          path: "/review-queue",
+          icon: ClipboardCheck,
+        },
+        { label: "Reports", path: "/reports", icon: FileText },
+        { label: "Progress", path: "/planning", icon: CalendarDays },
+      ],
+    },
+    {
+      section: "PROJECT",
+      items: [
+        { label: "Notifications", path: "/notifications", icon: Bell },
+      ],
+    },
+  ],
 
   contractor: [
     {
@@ -120,9 +115,19 @@ export const roleNavigation = {
           icon: LayoutDashboard,
         },
         {
-          label: "My Reports",
-          path: "/contractor-reports",
+          label: "Reports",
+          path: "/reports",
           icon: FileText,
+        },
+        {
+          label: "Submit Report",
+          path: "/submit-report",
+          icon: FilePlus2,
+        },
+        {
+          label: "Progress",
+          path: "/planning",
+          icon: CalendarDays,
         },
       ],
     },
@@ -130,12 +135,6 @@ export const roleNavigation = {
     {
       section: "PROJECT",
       items: [
-        {
-          label: "My Work",
-          path: "/planning",
-          icon: BriefcaseBusiness,
-        },
-        
         {
           label: "Notifications",
           path: "/notifications",
@@ -165,7 +164,7 @@ export const roleNavigation = {
           icon: FileText,
         },
         {
-          label: "Planning",
+          label: "Progress",
           path: "/planning",
           icon: CalendarDays,
         },
@@ -229,11 +228,6 @@ export const roleNavigation = {
           label: "Notifications",
           path: "/notifications",
           icon: Bell,
-        },
-        {
-          label: "Settings",
-          path: "/settings",
-          icon: Settings,
         },
       ],
     },

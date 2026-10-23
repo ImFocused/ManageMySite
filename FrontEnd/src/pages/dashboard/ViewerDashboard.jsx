@@ -3,13 +3,80 @@ import {
   CalendarDays,
   CheckCircle2,
   Clock3,
+  AlertTriangle,
   MapPin,
   MessageSquare,
-  Users,
+  FileCheck2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../../context/AppContext";
 import { demoUsers } from "../../data/mock";
+import { handleImageError, getReportPhoto } from "../../utils/imageUtils";
+
+const defaultTimelineStages = [
+  {
+    id: "stage-1",
+    title: "Earthwork (Excavation)",
+    status: "Completed",
+    scheduleStatus: "on_time",
+    scheduleLabel: "Completed 08 Jan 2026",
+    progress: 100,
+    completed: true,
+  },
+  {
+    id: "stage-2",
+    title: "Substructure (Footing)",
+    status: "Completed",
+    scheduleStatus: "on_time",
+    scheduleLabel: "Completed 30 Jan 2026",
+    progress: 100,
+    completed: true,
+  },
+  {
+    id: "stage-3",
+    title: "Upto Plinth Beam",
+    status: "Completed",
+    scheduleStatus: "on_time",
+    scheduleLabel: "Completed 25 Feb 2026",
+    progress: 100,
+    completed: true,
+  },
+  {
+    id: "stage-4",
+    title: "Superstructure (5F RCC)",
+    status: "In progress",
+    scheduleStatus: "delayed",
+    scheduleLabel: "Delayed (12 days) · 3rd Floor",
+    progress: 75,
+    active: true,
+  },
+  {
+    id: "stage-5",
+    title: "Brickwork (B/w) & Plaster",
+    status: "In progress",
+    scheduleStatus: "delayed",
+    scheduleLabel: "Delayed (14 days)",
+    progress: 50,
+    active: true,
+  },
+  {
+    id: "stage-6",
+    title: "MEP & Waterproofing",
+    status: "In progress",
+    scheduleStatus: "delayed",
+    scheduleLabel: "Active rough-in",
+    progress: 35,
+    active: true,
+  },
+  {
+    id: "stage-7",
+    title: "Paint & Services Handover",
+    status: "Upcoming",
+    scheduleStatus: "on_time",
+    scheduleLabel: "Target 01 Jan 2028",
+    progress: 10,
+  },
+];
 
 export default function ViewerDashboard() {
   const navigate = useNavigate();
@@ -21,12 +88,13 @@ export default function ViewerDashboard() {
 
   const currentStage = "Structure";
   const completedStages = 1;
-  const totalStages = 4;
+
+  const currentProjectStatus = project?.status || "Delayed";
+  const stages = project?.timelineStages || defaultTimelineStages;
 
   return (
     <div className="dashboard-page viewer-dashboard">
       {/* PROJECT HEADER */}
-
       <div className="viewer-project-header">
         <div>
           <p className="eyebrow">PROJECT OVERVIEW</p>
@@ -61,7 +129,6 @@ export default function ViewerDashboard() {
       </div>
 
       {/* PROGRESS SUMMARY */}
-
       <section className="viewer-progress-card">
         <div className="viewer-progress-main">
           <div>
@@ -113,7 +180,6 @@ export default function ViewerDashboard() {
       </section>
 
       {/* PROJECT SNAPSHOT */}
-
       <div className="viewer-section-heading">
         <div>
           <p className="eyebrow">AT A GLANCE</p>
@@ -146,17 +212,18 @@ export default function ViewerDashboard() {
           className="upcoming"
         />
 
-        <SnapshotCard
-          icon={<Users />}
-          label="Project team"
-          value="3 key roles"
-          detail="Engineer, Contractor & Builder"
-          className="team"
+        {/* PROJECT STATUS NOTIFICATION BOX (REPLACED PROJECT TEAM) */}
+        <ProjectStatusNotificationCard
+          status={currentProjectStatus}
+          detail={
+            currentProjectStatus === "Delayed"
+              ? project?.statusDetail || "Delayed by 12 days — recovery plan active"
+              : project?.statusDetail || "All construction phases tracking to schedule"
+          }
         />
       </div>
 
-      {/* MINI TIMELINE */}
-
+      {/* MINI TIMELINE BELOW AT A GLANCE */}
       <section className="panel viewer-timeline-panel">
         <div className="panel-header">
           <div>
@@ -174,56 +241,60 @@ export default function ViewerDashboard() {
         </div>
 
         <div className="viewer-timeline">
-          <TimelineStage
-            title="Foundation"
-            status="Completed"
-            progress={100}
-            active
-          />
-
-          <TimelineStage
-            title="Structure"
-            status="In progress"
-            progress={72}
-            active
-          />
-
-          <TimelineStage
-            title="Electrical"
-            status="Upcoming"
-            progress={0}
-          />
-
-          <TimelineStage
-            title="Finishing"
-            status="Upcoming"
-            progress={0}
-          />
+          {stages.map((stage) => (
+            <TimelineStage
+              key={stage.id}
+              id={stage.id}
+              title={stage.shortTitle || stage.title}
+              status={stage.status}
+              scheduleStatus={stage.scheduleStatus}
+              scheduleLabel={stage.scheduleLabel}
+              progress={stage.progress}
+              active={stage.active}
+              onClick={() => navigate("/planning")}
+            />
+          ))}
         </div>
 
         <div className="viewer-timeline-footer">
-          <span>
-            <span className="timeline-dot completed" />
-            Completed
-          </span>
+          <div className="footer-legend-group">
+            <span className="legend-title">Phase:</span>
+            <span>
+              <span className="timeline-dot completed" />
+              Completed
+            </span>
 
-          <span>
-            <span className="timeline-dot active" />
-            In progress
-          </span>
+            <span>
+              <span className="timeline-dot active" />
+              In progress
+            </span>
 
-          <span>
-            <span className="timeline-dot upcoming" />
-            Upcoming
-          </span>
+            <span>
+              <span className="timeline-dot upcoming" />
+              Upcoming
+            </span>
+          </div>
+
+          <span className="legend-divider">|</span>
+
+          <div className="footer-legend-group">
+            <span className="legend-title">Schedule Status:</span>
+            <span>
+              <span className="timeline-dot on-time" />
+              On Time
+            </span>
+
+            <span>
+              <span className="timeline-dot delayed" />
+              Delayed
+            </span>
+          </div>
         </div>
       </section>
 
       {/* LOWER CONTENT */}
-
       <div className="viewer-content-grid">
         {/* PUBLISHED UPDATES */}
-
         <section className="panel viewer-updates-panel">
           <div className="panel-header">
             <div>
@@ -259,8 +330,9 @@ export default function ViewerDashboard() {
                 >
                   <div className="viewer-update-image">
                     <img
-                      src={report.photos?.[0]?.url}
+                      src={getReportPhoto(report, 0)}
                       alt={report.photos?.[0]?.label || report.title}
+                      onError={handleImageError}
                     />
                   </div>
 
@@ -291,7 +363,6 @@ export default function ViewerDashboard() {
         </section>
 
         {/* PROJECT TEAM */}
-
         <section className="panel viewer-team-panel">
           <div className="panel-header">
             <div>
@@ -328,7 +399,6 @@ export default function ViewerDashboard() {
       </div>
 
       {/* QUERY CTA */}
-
       <section className="viewer-query-card">
         <div>
           <p className="eyebrow">NEED MORE INFORMATION?</p>
@@ -375,29 +445,136 @@ function SnapshotCard({
   );
 }
 
-function TimelineStage({
-  title,
-  status,
-  progress,
-  active = false,
-}) {
+function ProjectStatusNotificationCard({ status, detail }) {
+  const isDelayed = status === "Delayed";
+
   return (
-    <div className={`viewer-timeline-stage ${active ? "active" : ""}`}>
-      <div className="viewer-timeline-stage-header">
-        <div>
-          <strong>{title}</strong>
-          <span>{status}</span>
+    <div
+      className={`viewer-snapshot-card status-notification-card ${
+        isDelayed ? "status-delayed-card" : "status-ontime-card"
+      }`}
+    >
+      <div className="status-card-top-row">
+        <div
+          className={`viewer-snapshot-icon ${
+            isDelayed ? "icon-delayed" : "icon-ontime"
+          }`}
+        >
+          {isDelayed ? (
+            <AlertTriangle size={18} />
+          ) : (
+            <CheckCircle2 size={18} />
+          )}
         </div>
 
-        <strong>{progress}%</strong>
+        <span
+          className={`status-notification-badge ${
+            isDelayed ? "delayed" : "on-time"
+          }`}
+        >
+          {isDelayed ? "Notice: Delayed" : "Notice: On Track"}
+        </span>
+      </div>
+
+      <span className="status-card-label">Project status</span>
+
+      <strong
+        className={`status-card-value ${
+          isDelayed ? "delayed" : "on-time"
+        }`}
+      >
+        {status}
+      </strong>
+
+      <div
+        className={`status-notification-banner ${
+          isDelayed ? "delayed" : "on-time"
+        }`}
+      >
+        <span className="notification-dot-indicator" />
+        <p className="notification-text">
+          {detail}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TimelineStage({
+  id,
+  title,
+  status,
+  scheduleStatus = "on_time",
+  scheduleLabel,
+  progress,
+  active = false,
+  onClick,
+}) {
+  const isDelayed = scheduleStatus === "delayed";
+
+  return (
+    <div
+      className={`viewer-timeline-stage ${active ? "active" : ""} ${
+        isDelayed ? "stage-delayed" : "stage-ontime"
+      }`}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === "Enter" || e.key === " ")) {
+          onClick();
+        }
+      }}
+    >
+      <div className="viewer-timeline-stage-header">
+        <div>
+          <div className="stage-title-row">
+            <strong>{title}</strong>
+            <span
+              className={`timeline-schedule-chip ${
+                isDelayed ? "delayed" : "on-time"
+              }`}
+            >
+              {isDelayed ? (
+                <AlertTriangle size={11} />
+              ) : (
+                <CheckCircle2 size={11} />
+              )}
+              {isDelayed ? "Delayed" : "On Time"}
+            </span>
+          </div>
+
+          <div className="stage-status-row">
+            <span className="stage-phase-label">{status}</span>
+            {isDelayed && scheduleLabel && (
+              <span className="stage-delay-tag">{scheduleLabel}</span>
+            )}
+          </div>
+        </div>
+
+        <strong className="stage-percent">{progress}%</strong>
       </div>
 
       <div className="viewer-stage-track">
         <div
-          className="viewer-stage-fill"
+          className={`viewer-stage-fill ${
+            isDelayed ? "fill-delayed" : "fill-ontime"
+          }`}
           style={{ width: `${progress}%` }}
         />
       </div>
+
+      {isDelayed ? (
+        <div className="stage-delayed-alert">
+          <Clock3 size={12} />
+          <span>Notice: Task is running behind schedule</span>
+        </div>
+      ) : (
+        <div className="stage-ontime-notice">
+          <CheckCircle2 size={12} />
+          <span>Notice: Task is on schedule</span>
+        </div>
+      )}
     </div>
   );
 }

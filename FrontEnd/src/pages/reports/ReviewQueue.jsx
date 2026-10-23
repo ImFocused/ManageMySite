@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import { useApp } from "../../context/AppContext";
+import { handleImageError, getReportPhoto } from "../../utils/imageUtils";
 
 function getWaitingTime(submittedAt) {
   if (submittedAt.includes("28 Sep 2026")) {
@@ -25,7 +26,7 @@ function getWaitingTime(submittedAt) {
 
 export default function ReviewQueue() {
   const navigate = useNavigate();
-  const { project,reports } = useApp();
+  const { project, reports } = useApp();
 
   const waitingReports = reports.filter(
     (report) => report.status === "engineer_review"
@@ -141,15 +142,16 @@ export default function ReviewQueue() {
               >
                 <div className="review-queue-photo">
                   <img
-                    src={report.photos?.[0]?.url}
+                    src={getReportPhoto(report, 0)}
                     alt={
                       report.photos?.[0]?.label ||
                       report.title
                     }
+                    onError={handleImageError}
                   />
 
                   <span>
-                    {report.photos?.length || 0} photos
+                    {report.photos?.length || 1} {report.photos?.length === 1 ? "photo" : "photos"}
                   </span>
                 </div>
 

@@ -12,10 +12,15 @@ import {
   Send,
   RotateCcw,
   Eye,
-
+  Building2,
+  Layers,
+  ClipboardList,
+  Users,
+  TrendingUp,
 } from "lucide-react";
 
 import { useApp } from "../../context/AppContext";
+import { handleImageError, FALLBACK_CONSTRUCTION_IMAGE } from "../../utils/imageUtils";
 
 function getStatusLabel(status) {
   const labels = {
@@ -46,28 +51,22 @@ export default function ReportDetail() {
   const navigate = useNavigate();
 
   const {
-  demoRole,
-  reports,
-  approveReport,
-  declineReport,
-  builderApproveReport,
-  builderDeclineReport,
-  publishReport,
-  withdrawReport,
-  resubmitReport,
-  republishReport,
-} = useApp();
+    demoRole,
+    reports,
+    approveReport,
+    declineReport,
+    builderApproveReport,
+    builderDeclineReport,
+    publishReport,
+    withdrawReport,
+    resubmitReport,
+    republishReport,
+  } = useApp();
 
-  const report = reports.find(
-    (item) => item.id === reportId
-  );
+  const report = reports.find((item) => item.id === reportId);
 
-  const [selectedPhotoIndex, setSelectedPhotoIndex] =
-    useState(0);
-
-  const [showPhotoViewer, setShowPhotoViewer] =
-    useState(false);
-
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
+  const [showPhotoViewer, setShowPhotoViewer] = useState(false);
   const [feedback, setFeedback] = useState("");
 
   if (!report) {
@@ -87,61 +86,66 @@ export default function ReportDetail() {
     );
   }
 
-  const selectedPhoto =
-    report.photos[selectedPhotoIndex];
+  // Safe photos array ensuring no undefined crashes
+  const reportPhotos =
+    report.photos && Array.isArray(report.photos) && report.photos.length > 0
+      ? report.photos.map((p, idx) => ({
+          id: p.id || idx + 1,
+          label: p.label || `${report.title || "Report"} — Photo ${idx + 1}`,
+          url: p.url || FALLBACK_CONSTRUCTION_IMAGE,
+          coords: p.coords,
+        }))
+      : [
+          {
+            id: 1,
+            label: `${report.title || "Site Evidence"} — Verified Site Photo`,
+            url: FALLBACK_CONSTRUCTION_IMAGE,
+          },
+        ];
+
+  const safeIndex = Math.min(
+    Math.max(0, selectedPhotoIndex),
+    reportPhotos.length - 1
+  );
+  const selectedPhoto = reportPhotos[safeIndex] || reportPhotos[0];
 
   const canEngineerReview =
-    demoRole === "engineer" &&
-    report.status === "engineer_review";
+    demoRole === "engineer" && report.status === "engineer_review";
 
   const canBuilderReview =
-    demoRole === "builder" &&
-    report.status === "builder_review";
-  
-  const canPublish = 
-        demoRole === "builder" && report.status === "ready_to_publish";
+    demoRole === "builder" && report.status === "builder_review";
+
+  const canPublish =
+    demoRole === "builder" && report.status === "ready_to_publish";
 
   const canWithdraw =
-  demoRole === "builder" && report.status === "published";
+    demoRole === "builder" && report.status === "published";
 
   const canRepublish =
-  demoRole === "builder" && report.status === "withdrawn";
-
+    demoRole === "builder" && report.status === "withdrawn";
 
   const canContractorResubmit =
-  demoRole === "contractor" &&
-  (report.status === "contractor_revision" ||
-    report.status === "engineer_revision");
+    demoRole === "contractor" &&
+    (report.status === "contractor_revision" ||
+      report.status === "engineer_revision");
 
-  const isContractor =
-    demoRole === "contractor";
-
-  const isProjectManager =
-    demoRole === "projectManager";
-
-  const isViewer =
-    demoRole === "viewer";
+  const isContractor = demoRole === "contractor";
+  const isProjectManager = demoRole === "projectManager";
+  const isViewer = demoRole === "viewer";
 
   function nextPhoto() {
-    setSelectedPhotoIndex(
-      (current) =>
-        (current + 1) % report.photos.length
-    );
+    setSelectedPhotoIndex((current) => (current + 1) % reportPhotos.length);
   }
 
   function previousPhoto() {
     setSelectedPhotoIndex(
-      (current) =>
-        (current - 1 + report.photos.length) %
-        report.photos.length
+      (current) => (current - 1 + reportPhotos.length) % reportPhotos.length
     );
   }
 
   return (
     <div className="report-detail-page">
-
       {/* BACK */}
-
       <button
         className="workspace-back-button"
         onClick={() => navigate("/reports")}
@@ -151,16 +155,10 @@ export default function ReportDetail() {
       </button>
 
       {/* HEADER */}
-
       <section className="report-detail-header">
-
         <div>
-          <span className="report-id">
-            REPORT #{report.id}
-          </span>
-
+          <span className="report-id">REPORT #{report.id}</span>
           <h2>{report.title}</h2>
-
           <p className="report-header-location">
             <MapPin size={15} />
             {report.location}
@@ -168,59 +166,43 @@ export default function ReportDetail() {
         </div>
 
         <span
-          className={`report-detail-status ${getStatusClass(
-            report.status
-          )}`}
+          className={`report-detail-status ${getStatusClass(report.status)}`}
         >
           {getStatusLabel(report.status)}
         </span>
-
       </section>
 
       {/* PHOTO EVIDENCE */}
-
       <section className="panel report-evidence-panel">
-
         <div className="panel-header">
-
           <div>
-            <span className="panel-label">
-              SITE EVIDENCE
-            </span>
-
+            <span className="panel-label">SITE EVIDENCE</span>
             <h3>Construction Photos</h3>
           </div>
 
           <span className="photo-count">
-            {report.photos.length}{" "}
-            {report.photos.length === 1
-              ? "photo"
-              : "photos"}
+            {reportPhotos.length}{" "}
+            {reportPhotos.length === 1 ? "photo" : "photos"}
           </span>
-
         </div>
 
         <div className="evidence-viewer">
-
           <button
             className="evidence-main-photo"
-            onClick={() =>
-              setShowPhotoViewer(true)
-            }
+            onClick={() => setShowPhotoViewer(true)}
+            title="Click to view fullscreen inspection photo"
           >
             <img
               src={selectedPhoto.url}
               alt={selectedPhoto.label}
+              onError={handleImageError}
             />
 
-            <span className="photo-expand-hint">
-              Click to inspect photo
-            </span>
+            <span className="photo-expand-hint">Click to inspect photo</span>
           </button>
 
-          {report.photos.length > 1 && (
+          {reportPhotos.length > 1 && (
             <div className="evidence-thumbnails">
-
               <button
                 className="photo-arrow"
                 onClick={previousPhoto}
@@ -230,35 +212,23 @@ export default function ReportDetail() {
               </button>
 
               <div className="thumbnail-list">
+                {reportPhotos.map((photo, index) => (
+                  <button
+                    key={photo.id || index}
+                    className={`photo-thumbnail ${
+                      index === safeIndex ? "selected" : ""
+                    }`}
+                    onClick={() => setSelectedPhotoIndex(index)}
+                  >
+                    <img
+                      src={photo.url}
+                      alt={photo.label}
+                      onError={handleImageError}
+                    />
 
-                {report.photos.map(
-                  (photo, index) => (
-                    <button
-                      key={photo.id}
-                      className={`photo-thumbnail ${
-                        index ===
-                        selectedPhotoIndex
-                          ? "selected"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        setSelectedPhotoIndex(
-                          index
-                        )
-                      }
-                    >
-                      <img
-                        src={photo.url}
-                        alt={photo.label}
-                      />
-
-                      <span>
-                        {index + 1}
-                      </span>
-                    </button>
-                  )
-                )}
-
+                    <span>{index + 1}</span>
+                  </button>
+                ))}
               </div>
 
               <button
@@ -268,34 +238,22 @@ export default function ReportDetail() {
               >
                 <ChevronRight size={18} />
               </button>
-
             </div>
           )}
-
         </div>
-
       </section>
 
       {/* INFORMATION */}
-
       <section className="report-detail-grid">
-
         <div className="panel">
-
           <div className="panel-header">
-
             <div>
-              <span className="panel-label">
-                REPORT DETAILS
-              </span>
-
+              <span className="panel-label">REPORT DETAILS</span>
               <h3>Work Information</h3>
             </div>
-
           </div>
 
           <div className="report-information">
-
             <FileDetail
               icon={<User size={17} />}
               label="Submitted by"
@@ -314,44 +272,87 @@ export default function ReportDetail() {
               value={report.location}
             />
 
+            {report.buildingName && (
+              <FileDetail
+                icon={<Building2 size={17} />}
+                label="Building name"
+                value={report.buildingName}
+              />
+            )}
+
+            {report.floor && (
+              <FileDetail
+                icon={<Layers size={17} />}
+                label="Floor / Level"
+                value={report.floor}
+              />
+            )}
+
+            {report.activity && (
+              <FileDetail
+                icon={<ClipboardList size={17} />}
+                label="Activity / Task"
+                value={report.activity}
+              />
+            )}
+
+            {report.labourCount !== undefined && (
+              <FileDetail
+                icon={<Users size={17} />}
+                label="Workers on site"
+                value={`${report.labourCount} workers`}
+              />
+            )}
+
+            {report.progressPercent !== undefined && (
+              <div className="report-progress-row">
+                <div className="file-detail">
+                  <TrendingUp size={17} />
+                  <div>
+                    <span>Activity progress</span>
+                    <strong>{report.progressPercent}%</strong>
+                  </div>
+                </div>
+                <div className="rdr-progress-bar">
+                  <div
+                    className="rdr-progress-fill"
+                    style={{ width: `${report.progressPercent}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {selectedPhoto?.coords && (
+              <div className="rdr-geo-pill">
+                <MapPin size={13} />
+                <span>
+                  Geo-tagged: {selectedPhoto.coords.lat?.toFixed(5)},{" "}
+                  {selectedPhoto.coords.lng?.toFixed(5)}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="report-description">
-
             <span>WORK DESCRIPTION</span>
-
             <p>{report.description}</p>
-
           </div>
-
         </div>
 
         {/* TIMELINE */}
-
         <div className="panel">
-
           <div className="panel-header">
-
             <div>
-              <span className="panel-label">
-                WORKFLOW
-              </span>
-
+              <span className="panel-label">WORKFLOW</span>
               <h3>Approval Timeline</h3>
             </div>
-
           </div>
 
-          <ReviewTimeline
-            status={report.status}
-          />
-
+          <ReviewTimeline status={report.status} />
         </div>
-
       </section>
 
       {/* ROLE-SPECIFIC ACTION */}
-
       {canEngineerReview && (
         <ReviewActionPanel
           title="Engineer Review"
@@ -392,8 +393,6 @@ export default function ReportDetail() {
         />
       )}
 
-        
-
       {canPublish && (
         <section className="report-action-panel">
           <div className="report-action-panel-header">
@@ -401,8 +400,8 @@ export default function ReportDetail() {
               <span className="page-eyebrow">READY TO PUBLISH</span>
               <h2>Publish to Viewers</h2>
               <p>
-                This report has received final Builder approval and is ready to be
-                shared with project viewers.
+                This report has received final Builder approval and is ready to
+                be shared with project viewers.
               </p>
             </div>
           </div>
@@ -422,7 +421,6 @@ export default function ReportDetail() {
         </section>
       )}
 
-  
       {canWithdraw && (
         <WithdrawReportPanel
           report={report}
@@ -433,7 +431,6 @@ export default function ReportDetail() {
         />
       )}
 
-      
       {canRepublish && (
         <section className="report-action-panel">
           <div className="report-action-panel-header">
@@ -441,8 +438,8 @@ export default function ReportDetail() {
               <span className="page-eyebrow">WITHDRAWN REPORT</span>
               <h2>Republish to Viewers</h2>
               <p>
-                This will make the report visible to project viewers again.
-                Its previous withdrawal record will be retained.
+                This will make the report visible to project viewers again. Its
+                previous withdrawal record will be retained.
               </p>
             </div>
           </div>
@@ -468,11 +465,7 @@ export default function ReportDetail() {
         </section>
       )}
 
-
-
-      
-      {/* CONTRACTOR */}
-
+      {/* CONTRACTOR RESUBMIT */}
       {canContractorResubmit && (
         <section className="report-action-panel contractor-resubmit-panel">
           <div className="report-action-panel-header">
@@ -511,174 +504,125 @@ export default function ReportDetail() {
         </section>
       )}
 
-      {/* PROJECT MANAGER */}
-
+      {/* PROJECT MANAGER MONITORING */}
       {isProjectManager && (
         <section className="panel role-information-panel">
-
-          <span className="panel-label">
-            PROJECT MONITORING
-          </span>
-
+          <span className="panel-label">PROJECT MONITORING</span>
           <h3>Report Monitoring</h3>
 
           <div className="monitoring-row">
-
             <div>
               <span>Current status</span>
-
-              <strong>
-                {getStatusLabel(
-                  report.status
-                )}
-              </strong>
+              <strong>{getStatusLabel(report.status)}</strong>
             </div>
 
             <div>
               <span>Submitted by</span>
-
-              <strong>
-                {report.submittedBy}
-              </strong>
+              <strong>{report.submittedBy}</strong>
             </div>
 
             <div>
               <span>Waiting for action</span>
-
               <strong>
-                {report.status ===
-                "engineer_review"
+                {report.status === "engineer_review"
                   ? "Engineer"
-                  : report.status ===
-                    "builder_review"
+                  : report.status === "builder_review"
                   ? "Builder"
                   : "None"}
               </strong>
             </div>
-
           </div>
-
         </section>
       )}
 
-      {/* VIEWER */}
-
+      {/* VIEWER UPDATE */}
       {isViewer && (
         <section className="panel viewer-update-panel">
-
-          <span className="panel-label">
-            PROJECT UPDATE
-          </span>
-
+          <span className="panel-label">PROJECT UPDATE</span>
           <h3>Construction Update</h3>
 
           {report.status === "published" ? (
             <div className="viewer-published">
-
               <CheckCircle2 size={20} />
-
               <div>
-                <strong>
-                  Published project update
-                </strong>
-
+                <strong>Published project update</strong>
                 <span>
-                  This construction report has been
-                  approved and published by the
+                  This construction report has been approved and published by the
                   project team.
                 </span>
               </div>
-
             </div>
           ) : (
             <div className="viewer-private-message">
-
               <Eye size={20} />
-
               <div>
-                <strong>
-                  This report is not published yet.
-                </strong>
-
+                <strong>This report is not published yet.</strong>
                 <span>
-                  Internal review information is only
-                  visible to the project team.
+                  Internal review information is only visible to the project
+                  team.
                 </span>
               </div>
-
             </div>
           )}
-
         </section>
       )}
 
-      
-
-      {/* FULL PHOTO VIEWER */}
-
+      {/* FULL PHOTO VIEWER MODAL */}
       {showPhotoViewer && (
         <div
           className="photo-modal"
-          onClick={() =>
-            setShowPhotoViewer(false)
-          }
+          onClick={() => setShowPhotoViewer(false)}
         >
-
           <div
             className="photo-modal-content"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
+            onClick={(event) => event.stopPropagation()}
           >
-
             <button
               className="photo-modal-close"
-              onClick={() =>
-                setShowPhotoViewer(false)
-              }
+              onClick={() => setShowPhotoViewer(false)}
+              aria-label="Close photo preview"
             >
               ×
             </button>
 
-            <button
-              className="photo-modal-arrow left"
-              onClick={previousPhoto}
-            >
-              <ChevronLeft size={24} />
-            </button>
+            {reportPhotos.length > 1 && (
+              <button
+                className="photo-modal-arrow left"
+                onClick={previousPhoto}
+                aria-label="Previous photo"
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
 
             <img
               src={selectedPhoto.url}
               alt={selectedPhoto.label}
+              onError={handleImageError}
             />
 
-            <button
-              className="photo-modal-arrow right"
-              onClick={nextPhoto}
-            >
-              <ChevronRight size={24} />
-            </button>
+            {reportPhotos.length > 1 && (
+              <button
+                className="photo-modal-arrow right"
+                onClick={nextPhoto}
+                aria-label="Next photo"
+              >
+                <ChevronRight size={24} />
+              </button>
+            )}
 
             <div className="photo-modal-caption">
-              <strong>
-                {selectedPhoto.label}
-              </strong>
-
+              <strong>{selectedPhoto.label}</strong>
               <span>
-                Photo {selectedPhotoIndex + 1} of{" "}
-                {report.photos.length}
+                Photo {safeIndex + 1} of {reportPhotos.length}
               </span>
             </div>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 }
-
 
 function WithdrawReportPanel({ report, onWithdraw }) {
   const [reason, setReason] = useState("");
@@ -702,9 +646,7 @@ function WithdrawReportPanel({ report, onWithdraw }) {
         </div>
       </div>
 
-      <label className="review-feedback-label">
-        Reason for withdrawal
-      </label>
+      <label className="review-feedback-label">Reason for withdrawal</label>
 
       <textarea
         className="review-feedback-input"
@@ -747,15 +689,10 @@ function WithdrawReportPanel({ report, onWithdraw }) {
   );
 }
 
-function FileDetail({
-  icon,
-  label,
-  value,
-}) {
+function FileDetail({ icon, label, value }) {
   return (
     <div className="file-detail">
       {icon}
-
       <div>
         <span>{label}</span>
         <strong>{value}</strong>
@@ -765,19 +702,12 @@ function FileDetail({
 }
 
 function ReviewTimeline({ status }) {
-  const engineerDone =
-    status !== "engineer_review";
-
-  const builderDone =
-    status === "approved" ||
-    status === "published";
-
-  const published =
-    status === "published";
+  const engineerDone = status !== "engineer_review";
+  const builderDone = status === "approved" || status === "published";
+  const published = status === "published";
 
   return (
     <div className="review-timeline">
-
       <TimelineItem
         title="Contractor submitted"
         description="Report submitted with site evidence"
@@ -807,30 +737,18 @@ function ReviewTimeline({ status }) {
       <TimelineItem
         title="Published to viewers"
         description={
-          published
-            ? "Published project update"
-            : "Not published yet"
+          published ? "Published project update" : "Not published yet"
         }
         active={published}
       />
-
     </div>
   );
 }
 
-function TimelineItem({
-  title,
-  description,
-  active,
-}) {
+function TimelineItem({ title, description, active }) {
   return (
-    <div
-      className={`timeline-item ${
-        active ? "active" : ""
-      }`}
-    >
+    <div className={`timeline-item ${active ? "active" : ""}`}>
       <div className="timeline-marker" />
-
       <div>
         <strong>{title}</strong>
         <span>{description}</span>
@@ -854,33 +772,25 @@ function ReviewActionPanel({
     <section className="panel review-action-panel">
       <div className="review-action-header">
         <div>
-          <span className="panel-label">
-            {eyebrow}
-          </span>
-
+          <span className="panel-label">{eyebrow}</span>
           <h3>{title}</h3>
-
           <p>{description}</p>
         </div>
       </div>
 
-      <label className="review-feedback-label">
-        Feedback / review note
-      </label>
+      <label className="review-feedback-label">Feedback / review note</label>
 
       <textarea
         className="review-feedback-input"
         placeholder="Add feedback for the report..."
         value={feedback}
-        onChange={(event) =>
-          setFeedback(event.target.value)
-        }
+        onChange={(event) => setFeedback(event.target.value)}
       />
 
       <div className="review-action-note">
         <span>
-          Feedback is optional when approving.
-          A reason should be provided when declining.
+          Feedback is optional when approving. A reason should be provided when
+          declining.
         </span>
       </div>
 

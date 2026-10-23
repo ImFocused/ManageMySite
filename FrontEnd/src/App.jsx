@@ -14,6 +14,8 @@ import BuilderReviewQueue from "./pages/reports/BuilderReviewQueue";
 import ContractorReports from "./pages/reports/ContractorReports";
 import Team from "./pages/team/Team";
 import Queries from "./pages/queries/Queries";
+import Resources from "./pages/resources/Resources";
+import SubmitReport from "./pages/reports/SubmitReport";
 import "./App.css";
 
 function Placeholder({ title }) {
@@ -73,6 +75,15 @@ export default function App() {
             element={
               <AppShell>
                 <Queries />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/resources"
+            element={
+              <AppShell>
+                <Resources />
               </AppShell>
             }
           />
@@ -150,6 +161,15 @@ export default function App() {
             element={
               <AppShell>
                 <BuilderReviewQueue />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/submit-report"
+            element={
+              <AppShell>
+                <SubmitReport />
               </AppShell>
             }
           />
