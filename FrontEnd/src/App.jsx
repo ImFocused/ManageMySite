@@ -1,0 +1,191 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppProvider } from "./context/AppContext";
+
+import Login from "./pages/auth/Login";
+import AppShell from "./components/layout/AppShell";
+import Dashboard from "./pages/dashboard/Dashboard";
+import MyProjects from "./pages/projects/MyProjects";
+import ProjectWorkspace from "./pages/projects/ProjectWorkspace";
+import Reports from "./pages/reports/Reports";
+import ReportDetail from "./pages/reports/ReportDetail";
+import Planning from "./pages/planning/Planning";
+import ReviewQueue from "./pages/reports/ReviewQueue";
+import BuilderReviewQueue from "./pages/reports/BuilderReviewQueue";
+import ContractorReports from "./pages/reports/ContractorReports";
+import Team from "./pages/team/Team";
+import Queries from "./pages/queries/Queries";
+import Resources from "./pages/resources/Resources";
+import SubmitReport from "./pages/reports/SubmitReport";
+import "./App.css";
+
+function Placeholder({ title }) {
+  return (
+    <div className="placeholder-page">
+      <p className="eyebrow">MANAGEMYSITE</p>
+      <h2>{title}</h2>
+      <p>
+        This section is part of the UI blueprint and will be
+        built in the next step.
+      </p>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AppProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to="/login" replace />}
+          />
+
+          <Route path="/login" element={<Login />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <AppShell>
+                <Dashboard />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/planning"
+            element={
+              <AppShell>
+                <Planning />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/team"
+            element={
+              <AppShell>
+                <Team />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/queries"
+            element={
+              <AppShell>
+                <Queries />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/resources"
+            element={
+              <AppShell>
+                <Resources />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/notifications"
+            element={
+              <AppShell>
+                <Placeholder title="Notifications" />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/audit"
+            element={
+              <AppShell>
+                <Placeholder title="Audit History" />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <AppShell>
+                <Placeholder title="Settings" />
+              </AppShell>
+            }
+          />
+
+          <Route 
+            path="/projects" 
+            element={
+              <AppShell>
+                <MyProjects />
+              </AppShell>
+            }  
+          />
+
+          <Route
+            path="/projects/:projectId"
+            element={
+            <AppShell>
+              <ProjectWorkspace />
+            </AppShell>
+            }
+          />
+
+          <Route
+            path="/review-queue"
+            element={<AppShell><ReviewQueue /></AppShell>}
+          />
+
+          <Route
+            path="/reports"
+            element={
+              <AppShell>
+                <Reports />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/reports/:reportId"
+            element={
+              <AppShell>
+                <ReportDetail />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/builder-review"
+            element={
+              <AppShell>
+                <BuilderReviewQueue />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/submit-report"
+            element={
+              <AppShell>
+                <SubmitReport />
+              </AppShell>
+            }
+          />
+
+          <Route
+            path="/contractor-reports"
+            element={
+              <AppShell>
+                <ContractorReports />
+              </AppShell>
+            }
+          />
+
+          
+        </Routes>
+      </BrowserRouter>
+    </AppProvider>
+  );
+}
